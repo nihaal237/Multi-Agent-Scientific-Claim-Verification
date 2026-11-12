@@ -1,0 +1,32 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: python -m src.ingest
+    deps:
+    - path: src/ingest.py
+      hash: md5
+      md5: 636c828f9bc139cc7f8d1c3e866049d5
+      size: 2485
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: bf7a09ccb2ceb0ab6addea6ad8a89fd3.dir
+      size: 8582555
+      nfiles: 5
+  validate:
+    cmd: python -m src.validate
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: bf7a09ccb2ceb0ab6addea6ad8a89fd3.dir
+      size: 8582555
+      nfiles: 5
+    - path: src/validate.py
+      hash: md5
+      md5: 06631037ebbc8e16a0c5a86b9a98095d
+      size: 4353
+    outs:
+    - path: reports/validation.json
+      hash: md5
+      md5: 5a415dc2ab7d1a04527c8c759f573d88
+      size: 419

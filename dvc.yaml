@@ -1,0 +1,16 @@
+
+stages:
+  ingest:
+    cmd: python -m src.ingest
+    deps:
+      - src/ingest.py
+    outs:
+      - data/raw
+
+  validate:
+    cmd: python -m src.validate
+    deps:
+      - src/validate.py
+      - data/raw
+    outs:
+      - reports/validation.json

@@ -1,7 +1,30 @@
+# Python
 .venv/
 __pycache__/
 *.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Secrets
 .env
-data/
-models/
-mlruns/
+.env.*
+!.env.example
+
+# Raw and processed datasets
+/data/
+
+# Generated artifacts
+/artifacts/
+/mlruns/
+/reports/
+
+# Local vector database
+/qdrant_storage/
+
+# Editor and OS
+.vscode/
+.DS_Store
+
+# DVC cache
+.dvc/cache/
+.dvc/tmp/
