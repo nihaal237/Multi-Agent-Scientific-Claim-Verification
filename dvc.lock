@@ -30,3 +30,95 @@ stages:
       hash: md5
       md5: 5a415dc2ab7d1a04527c8c759f573d88
       size: 419
+  preprocess:
+    cmd: python -m src.preprocess
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: bf7a09ccb2ceb0ab6addea6ad8a89fd3.dir
+      size: 8582555
+      nfiles: 5
+    - path: reports/validation.json
+      hash: md5
+      md5: 5a415dc2ab7d1a04527c8c759f573d88
+      size: 419
+    - path: src/preprocess.py
+      hash: md5
+      md5: 89aab02148bec771ec599a5c0b5d953d
+      size: 2432
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 2bc0e73375a23419582c69fd3038984e.dir
+      size: 44840901
+      nfiles: 5
+  build_index:
+    cmd: python -m src.build_index
+    deps:
+    - path: configs/retrieval.yaml
+      hash: md5
+      md5: 6133f4466d9fdce3493ed03fdfddf117
+      size: 131
+    - path: data/processed/chunks.jsonl
+      hash: md5
+      md5: 264950b0f9b072fe5e3689fbb807fb08
+      size: 28993272
+    - path: src/build_index.py
+      hash: md5
+      md5: 930b08b9cef061bc0911c0ca4379ce0d
+      size: 3067
+    outs:
+    - path: artifacts/index/qdrant
+      hash: md5
+      md5: 3a62836971211af99afddbac68ce6735.dir
+      size: 220721755
+      nfiles: 3
+  evaluate_bm25:
+    cmd: python -m src.evaluation.evaluate_bm25
+    deps:
+    - path: data/processed/claims_dev.jsonl
+      hash: md5
+      md5: 967021ad9ae1f7e9a858df86bac5a421
+      size: 65271
+    - path: data/processed/documents.jsonl
+      hash: md5
+      md5: 28153ddbebb66e896f115351f673ed10
+      size: 15571987
+    - path: src/evaluation/evaluate_bm25.py
+      hash: md5
+      md5: 9386ef585574c41ebbe73171b179c791
+      size: 2290
+    - path: src/retrieval/bm25.py
+      hash: md5
+      md5: 2e0d9e39311360dd2c6bf9bd8f0b92dd
+      size: 1779
+    outs:
+    - path: reports/bm25_retrieval_metrics.json
+      hash: md5
+      md5: 2bfe9849b55015b13047156b23728267
+      size: 170
+  evaluate_semantic:
+    cmd: python -m src.evaluation.evaluate_retrieval
+    deps:
+    - path: artifacts/index/qdrant
+      hash: md5
+      md5: 3a62836971211af99afddbac68ce6735.dir
+      size: 220721755
+      nfiles: 3
+    - path: configs/retrieval.yaml
+      hash: md5
+      md5: 6133f4466d9fdce3493ed03fdfddf117
+      size: 131
+    - path: data/processed/claims_dev.jsonl
+      hash: md5
+      md5: 967021ad9ae1f7e9a858df86bac5a421
+      size: 65271
+    - path: src/evaluation/evaluate_retrieval.py
+      hash: md5
+      md5: 6ce0c0c1cfed1d73adb44450453adfb0
+      size: 3261
+    outs:
+    - path: reports/semantic_retrieval_metrics.json
+      hash: md5
+      md5: 62f62d1bd2c1d4dd380bb9841709329f
+      size: 170

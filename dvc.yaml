@@ -1,4 +1,3 @@
-
 stages:
   ingest:
     cmd: python -m src.ingest
@@ -14,3 +13,41 @@ stages:
       - data/raw
     outs:
       - reports/validation.json
+
+  preprocess:
+    cmd: python -m src.preprocess
+    deps:
+      - src/preprocess.py
+      - data/raw
+      - reports/validation.json
+    outs:
+      - data/processed
+
+  build_index:
+    cmd: python -m src.build_index
+    deps:
+      - src/build_index.py
+      - data/processed/chunks.jsonl
+      - configs/retrieval.yaml
+    outs:
+      - artifacts/index/qdrant
+
+  evaluate_bm25:
+    cmd: python -m src.evaluation.evaluate_bm25
+    deps:
+      - src/evaluation/evaluate_bm25.py
+      - src/retrieval/bm25.py
+      - data/processed/documents.jsonl
+      - data/processed/claims_dev.jsonl
+    metrics:
+      - reports/bm25_retrieval_metrics.json
+
+  evaluate_semantic:
+    cmd: python -m src.evaluation.evaluate_retrieval
+    deps:
+      - src/evaluation/evaluate_retrieval.py
+      - configs/retrieval.yaml
+      - data/processed/claims_dev.jsonl
+      - artifacts/index/qdrant
+    metrics:
+      - reports/semantic_retrieval_metrics.json
