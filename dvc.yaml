@@ -43,11 +43,25 @@ stages:
       - reports/bm25_retrieval_metrics.json
 
   evaluate_semantic:
-    cmd: python -m src.evaluation.evaluate_retrieval
-    deps:
+     cmd: python -m src.evaluation.evaluate_retrieval
+     deps:
       - src/evaluation/evaluate_retrieval.py
       - configs/retrieval.yaml
       - data/processed/claims_dev.jsonl
       - artifacts/index/qdrant
-    metrics:
+     metrics:
       - reports/semantic_retrieval_metrics.json
+
+  evaluate_hybrid:
+     cmd: python -m src.evaluation.evaluate_hybrid
+     deps:
+      - src/evaluation/evaluate_hybrid.py
+      - src/retrieval/hybrid.py
+      - src/retrieval/bm25.py
+      - configs/hybrid.yaml
+      - configs/retrieval.yaml
+      - data/processed/documents.jsonl
+      - data/processed/claims_dev.jsonl
+      - artifacts/index/qdrant
+     metrics:
+      - reports/hybrid_retrieval_metrics.json

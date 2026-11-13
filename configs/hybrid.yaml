@@ -1,0 +1,5 @@
+bm25_top_k: 30
+semantic_top_k: 30
+semantic_chunk_fetch: 300
+rerank_top_k: 10
+cross_encoder_model: cross-encoder/ms-marco-MiniLM-L-6-v2

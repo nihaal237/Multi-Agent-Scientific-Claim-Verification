@@ -122,3 +122,44 @@ stages:
       hash: md5
       md5: 62f62d1bd2c1d4dd380bb9841709329f
       size: 170
+  evaluate_hybrid:
+    cmd: python -m src.evaluation.evaluate_hybrid
+    deps:
+    - path: artifacts/index/qdrant
+      hash: md5
+      md5: 3a62836971211af99afddbac68ce6735.dir
+      size: 220721755
+      nfiles: 3
+    - path: configs/hybrid.yaml
+      hash: md5
+      md5: 3c3f08e8476e2867a34d3ac01488a44f
+      size: 138
+    - path: configs/retrieval.yaml
+      hash: md5
+      md5: 6133f4466d9fdce3493ed03fdfddf117
+      size: 131
+    - path: data/processed/claims_dev.jsonl
+      hash: md5
+      md5: 967021ad9ae1f7e9a858df86bac5a421
+      size: 65271
+    - path: data/processed/documents.jsonl
+      hash: md5
+      md5: 28153ddbebb66e896f115351f673ed10
+      size: 15571987
+    - path: src/evaluation/evaluate_hybrid.py
+      hash: md5
+      md5: 2008d2446587041c3aa0a7433acc5c04
+      size: 2391
+    - path: src/retrieval/bm25.py
+      hash: md5
+      md5: 2e0d9e39311360dd2c6bf9bd8f0b92dd
+      size: 1779
+    - path: src/retrieval/hybrid.py
+      hash: md5
+      md5: dbfeebfc07d9ef7c18f4dd8c49f07ad3
+      size: 3788
+    outs:
+    - path: reports/hybrid_retrieval_metrics.json
+      hash: md5
+      md5: c44c965b3a77327e001d18c4146cab36
+      size: 173
