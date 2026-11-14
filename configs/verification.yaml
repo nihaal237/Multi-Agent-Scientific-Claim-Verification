@@ -1,0 +1,7 @@
+nli_model: cross-encoder/nli-deberta-v3-small
+bm25_top_k: 5
+max_evidence: 3
+max_sentences_per_paper: 3
+min_confidence: 0.55
+max_retries: 1
+evaluation_limit: 30
