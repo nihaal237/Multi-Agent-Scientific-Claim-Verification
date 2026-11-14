@@ -6,7 +6,7 @@ The goal is to develop a multi-agent AI system capable of determining whether a 
 
 The project uses the **SciFact dataset** and follows a reproducible ML pipeline using **DVC and DagsHub**.
 
-> **Current Development Stage:** Dataset ingestion, validation, preprocessing, vector indexing, and retrieval evaluation are complete. Multi-agent verification and MLflow integration are the next development stages.
+> **Current Development Stage (13 November 2026):** Dataset ingestion, validation, preprocessing, vector indexing, and retrieval evaluation are complete. Multi-agent verification and MLflow integration remain planned.
 
 ---
 
@@ -38,6 +38,8 @@ We use the **SciFact dataset**, which contains scientific claims, research paper
 **Dataset:** https://huggingface.co/datasets/allenai/scifact
 
 **Original Repository:** https://github.com/allenai/scifact
+
+**Project Repository:** https://github.com/nihaal237/Multi-Agent-Scientific-Claim-Verification
 
 ### Dataset Statistics
 
@@ -303,7 +305,7 @@ Evaluation metrics are stored as JSON files in the `reports/` directory.
 
 DVC is used to make the data pipeline reproducible.
 
-The project uses **DagsHub as remote DVC storage**.
+The project has used **DagsHub for remote DVC storage**. The supplied repository snapshot has an empty `.dvc/config`, so new clones must configure the remote before `dvc pull` or `dvc push`. Never commit credentials.
 
 The pipeline contains the following stages:
 
@@ -343,7 +345,7 @@ dvc push
 dvc pull
 ```
 
-The DVC remote stores datasets, generated embeddings, Qdrant index files, and other tracked outputs.
+The configured DVC remote stores datasets, generated embeddings, Qdrant index files, and other tracked outputs.
 
 Generated data and model artifacts are not committed directly to GitHub.
 
@@ -353,7 +355,7 @@ Generated data and model artifacts are not committed directly to GitHub.
 
 ### Prerequisites
 
-- Python 3.12 or newer
+- Python 3.12 (recommended; verify compatibility with pinned dependencies)
 - Git
 - DVC
 - Internet connection
@@ -391,7 +393,7 @@ python -m pip install -r requirements.txt
 
 ### Download Data and Artifacts
 
-After configuring DagsHub authentication:
+After configuring your own DVC remote and authentication (the repository snapshot contains an empty `.dvc/config`; obtain the remote URL from the project owner):
 
 ```bash
 dvc pull
@@ -501,7 +503,37 @@ Docker, frontend development, cloud deployment, and monitoring will be addressed
 ---
 
 
-## 11. References
+## 11. Reproducibility, Status, and Known Limitations
+
+**Verified development status (13 November 2026):** Data ingestion, validation, preprocessing, local Qdrant indexing, three retrieval methods, and development-set retrieval evaluations are implemented. Validation passed with zero errors. The reported metrics are from the project handover; they have not been independently rerun in this README update.
+
+**Not yet implemented in this repository snapshot:** An end-to-end support/contradiction verifier, the five LangGraph agents, evidence-level and verdict-level evaluation, remote MLflow experiments and registry registration, a web interface, Docker, cloud deployment, CI/CD, and monitoring. The `src/agents/` directory is currently a placeholder. Installing packages such as FastAPI or MLflow does not mean those services are operational.
+
+**Reproducibility notes:**
+
+- Run all commands from the repository root. `dvc repro` runs the declared seven stages; it does **not** yet reproduce a complete multi-agent verification workflow.
+- `python -m src.build_index` deletes and rebuilds `artifacts/index/qdrant`; use `dvc pull` when an existing index is available. Avoid concurrent access to the same local Qdrant directory.
+- The dataset download is protected by a fixed SHA-256 checksum; if the upstream `latest` archive changes, ingestion intentionally fails.
+- The provided `requirements.txt` is a large environment-specific pinned dependency export (including Windows-specific packages). Installation on other platforms may require a curated dependency file.
+- The SciFact test claims have no public evidence labels in this project, so the reported retrieval evaluation uses the annotated development subset.
+- The original assignment requires a baseline **and** an end-to-end main system, two remote MLflow runs, a registered artifact, and reproducible pipeline stages; these are not yet all satisfied.
+
+### Next implementation milestones
+
+1. Add BM25 + pretrained NLI baseline with evidence sentence extraction and verdict metrics.
+2. Implement claim analyzer, retrieval, evidence, verification, and report agents with LangGraph.
+3. Add fixed-split end-to-end evaluations, including evidence F1, verdict Macro-F1, latency, and failure rates.
+4. Track reproducible runs on remote MLflow and register the relevant model or system artifact.
+5. Version agent prompts/configuration and evaluation outputs in DVC, then verify `dvc pull` and `dvc repro` from a clean clone.
+6. Subsequently implement FastAPI, React, Docker, AWS deployment, and observability.
+
+### Credential safety
+
+Keep DagsHub tokens, MLflow credentials, AWS keys, and `.env` files out of Git. Configure access using local environment variables or credential storage. Do not put usernames with passwords or tokens inside tracked `.dvc/config`, README examples, or committed URLs.
+
+---
+
+## 12. References
 
 - SciFact: https://github.com/allenai/scifact
 - SciFact Dataset on Hugging Face: https://huggingface.co/datasets/allenai/scifact
@@ -514,7 +546,7 @@ Docker, frontend development, cloud deployment, and monitoring will be addressed
 
 ---
 
-## Academic Use
+## 13. Academic Use
 
 This project is developed for the MLOps course, Fall 2026, at FAST-NUCES Lahore.
 
