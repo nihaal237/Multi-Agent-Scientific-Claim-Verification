@@ -47,6 +47,11 @@ def evaluate(mode, limit):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', choices=['baseline','agent'], required=True)
-    parser.add_argument('--limit', type=int, default=30)
+    parser.add_argument(
+        '--limit',
+        type=int,
+        default=None,
+        help='Maximum number of labeled claims to evaluate (default: all)'
+    )
     args = parser.parse_args()
     evaluate(args.mode, args.limit)
