@@ -65,3 +65,30 @@ stages:
       - artifacts/index/qdrant
      metrics:
       - reports/hybrid_retrieval_metrics.json
+
+  evaluate_bm25_nli:
+    cmd: python -m src.evaluation.evaluate_end_to_end --mode baseline
+    deps:
+      - src/evaluation/evaluate_end_to_end.py
+      - src/agents
+      - src/retrieval/bm25.py
+      - configs/verification.yaml
+      - data/processed/claims_dev.jsonl
+      - data/processed/documents.jsonl
+    metrics:
+      - reports/bm25_nli_end_to_end_metrics.json
+
+  evaluate_agent:
+    cmd: python -m src.evaluation.evaluate_end_to_end --mode agent
+    deps:
+      - src/evaluation/evaluate_end_to_end.py
+      - src/agents
+      - src/retrieval
+      - configs/verification.yaml
+      - configs/hybrid.yaml
+      - configs/retrieval.yaml
+      - data/processed/claims_dev.jsonl
+      - data/processed/documents.jsonl
+      - artifacts/index/qdrant
+    metrics:
+      - reports/agent_end_to_end_metrics.json
