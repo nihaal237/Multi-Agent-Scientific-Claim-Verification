@@ -163,3 +163,120 @@ stages:
       hash: md5
       md5: c44c965b3a77327e001d18c4146cab36
       size: 173
+  evaluate_baseline:
+    cmd: python -m src.evaluation.evaluate_end_to_end --mode baseline
+    deps:
+    - path: configs/verification.yaml
+      hash: md5
+      md5: 574884c266365972d658ba21303f7a7f
+      size: 160
+    - path: data/processed/claims_dev.jsonl
+      hash: md5
+      md5: 967021ad9ae1f7e9a858df86bac5a421
+      size: 65271
+    - path: data/processed/documents.jsonl
+      hash: md5
+      md5: 28153ddbebb66e896f115351f673ed10
+      size: 15571987
+    - path: src/agents
+      hash: md5
+      md5: 445277db70964f60450d6748f134dbe0.dir
+      size: 18062
+      nfiles: 4
+    - path: src/agents/workflow.py
+      hash: md5
+      md5: 6ae396062187dad4676fc2f0b96764ae
+      size: 5895
+    - path: src/evaluation/evaluate_end_to_end.py
+      hash: md5
+      md5: aef92424594d22208a558d251d9a7f49
+      size: 3729
+    - path: src/retrieval/bm25.py
+      hash: md5
+      md5: 2e0d9e39311360dd2c6bf9bd8f0b92dd
+      size: 1779
+    outs:
+    - path: reports/baseline_end_to_end_metrics.json
+      hash: md5
+      md5: d9301c2e3f987d141901589f5457c7f4
+      size: 439
+  evaluate_agent:
+    cmd: python -m src.evaluation.evaluate_end_to_end --mode agent
+    deps:
+    - path: artifacts/index/qdrant
+      hash: md5
+      md5: 3a62836971211af99afddbac68ce6735.dir
+      size: 220721755
+      nfiles: 3
+    - path: configs/hybrid.yaml
+      hash: md5
+      md5: 3c3f08e8476e2867a34d3ac01488a44f
+      size: 138
+    - path: configs/retrieval.yaml
+      hash: md5
+      md5: 6133f4466d9fdce3493ed03fdfddf117
+      size: 131
+    - path: configs/verification.yaml
+      hash: md5
+      md5: 574884c266365972d658ba21303f7a7f
+      size: 160
+    - path: data/processed/claims_dev.jsonl
+      hash: md5
+      md5: 967021ad9ae1f7e9a858df86bac5a421
+      size: 65271
+    - path: data/processed/documents.jsonl
+      hash: md5
+      md5: 28153ddbebb66e896f115351f673ed10
+      size: 15571987
+    - path: src/agents
+      hash: md5
+      md5: 445277db70964f60450d6748f134dbe0.dir
+      size: 18062
+      nfiles: 4
+    - path: src/evaluation/evaluate_end_to_end.py
+      hash: md5
+      md5: 60a406d12435baca46e857d31d1a99f1
+      size: 3814
+    - path: src/retrieval
+      hash: md5
+      md5: 449753adfead26a33c01b20edc695b02.dir
+      size: 17919
+      nfiles: 7
+    outs:
+    - path: reports/agent_end_to_end_metrics.json
+      hash: md5
+      md5: 450d3ed25683f35c5d5e173c88046488
+      size: 437
+  evaluate_bm25_nli:
+    cmd: python -m src.evaluation.evaluate_end_to_end --mode baseline
+    deps:
+    - path: configs/verification.yaml
+      hash: md5
+      md5: 574884c266365972d658ba21303f7a7f
+      size: 160
+    - path: data/processed/claims_dev.jsonl
+      hash: md5
+      md5: 967021ad9ae1f7e9a858df86bac5a421
+      size: 65271
+    - path: data/processed/documents.jsonl
+      hash: md5
+      md5: 28153ddbebb66e896f115351f673ed10
+      size: 15571987
+    - path: src/agents
+      hash: md5
+      md5: 445277db70964f60450d6748f134dbe0.dir
+      size: 18062
+      nfiles: 4
+    - path: src/evaluation/evaluate_end_to_end.py
+      hash: md5
+      md5: 60a406d12435baca46e857d31d1a99f1
+      size: 3814
+    - path: src/retrieval/bm25.py
+      hash: md5
+      md5: 2e0d9e39311360dd2c6bf9bd8f0b92dd
+      size: 1779
+    outs:
+    - path: reports/bm25_nli_end_to_end_metrics.json
+      hash: md5
+      md5: 1b05bf8636c7e108d5966ea8ad8f1766
+      size: 439

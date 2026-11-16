@@ -52,9 +52,28 @@ class ScientificClaimPipeline(mlflow.pyfunc.PythonModel):
             cfg = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
             cfg[key] = context.artifacts[artifact_key]
             cfg_path.write_text(yaml.safe_dump(cfg), encoding="utf-8")
+        import sys
+
+        code_root = Path(__file__).resolve().parent.parent
+
+        if str(code_root) not in sys.path:
+            sys.path.insert(0, str(code_root))   
         from src.agents.workflow import Verifier
         with in_directory(self.root):
             self.verifier = Verifier(mode="agent")
+
+    def close(self):
+        if getattr(self, "verifier", None) is not None:
+            # Release the Qdrant database lock before removing files.
+            retriever = getattr(self.verifier, "retriever", None)
+
+            if retriever is not None:
+                qdrant = getattr(retriever, "qdrant", None)
+                if qdrant is not None:
+                    qdrant.close()
+
+        if getattr(self, "_workspace", None) is not None:
+            self._workspace.cleanup()
 
     def predict(self, context, model_input, params=None):
         if isinstance(model_input, pd.DataFrame):
@@ -119,7 +138,7 @@ def main():
         "sentence_bert_config.json", "tokenizer.json", "tokenizer_config.json",
         "special_tokens_map.json", "added_tokens.json", "vocab.txt",
         "merges.txt", "spm.model", "sentencepiece.bpe.model",
-        "model.safetensors", "pytorch_model.bin",
+        "model.safetensors",
         "1_Pooling/config.json", "0_Transformer/config.json",
     ]
     try:
@@ -134,7 +153,13 @@ def main():
             for source in snapshot.rglob("*"):
                 if not source.is_file():
                     continue
+
                 relative = source.relative_to(snapshot)
+
+                # Copy only explicitly permitted model files.
+                if relative.as_posix() not in allowed:
+                    continue
+
                 target = destination / relative
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source, target, follow_symlinks=True)

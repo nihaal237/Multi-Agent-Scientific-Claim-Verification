@@ -39,7 +39,10 @@ def evaluate(mode, limit):
     y_pred = [r['pred_label'] for r in rows]
     metrics = {'examples': len(rows), 'excluded_ambiguous': len(claims)-len(rows), 'recall_at_5': mean(r['recall_at_5'] for r in rows), 'recall_at_10': mean(r['recall_at_10'] for r in rows), 'evidence_precision': mean(r['evidence_precision'] for r in rows), 'evidence_recall': mean(r['evidence_recall'] for r in rows), 'evidence_f1': mean(r['evidence_f1'] for r in rows), 'label_macro_f1': f1_score(y_true, y_pred, labels=['SUPPORT','CONTRADICT'], average='macro', zero_division=0), 'joint_correctness': mean(r['joint_correct'] for r in rows), 'mean_latency_seconds': mean(r['latency_seconds'] for r in rows), 'mean_tool_calls': mean(r['tool_calls'] for r in rows), 'total_llm_tokens': sum(r['llm_tokens'] for r in rows)}
     Path('reports').mkdir(exist_ok=True)
-    Path(f'reports/{mode}_end_to_end_metrics.json').write_text(json.dumps(metrics, indent=2))
+    output_name = "bm25_nli" if mode == "baseline" else "agent"
+    Path(f"reports/{output_name}_end_to_end_metrics.json").write_text(
+        json.dumps(metrics, indent=2)
+    )
     Path(f'reports/{mode}_predictions.json').write_text(json.dumps(rows, indent=2))
     print(json.dumps(metrics, indent=2))
     return metrics
